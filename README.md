@@ -1,66 +1,82 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Descrizione
+Creiamo una tabella trains e relativa Migration.
+Ogni treno dovrà avere almeno:
+Azienda
+Stazione di partenza
+Stazione di arrivo
+Orario di partenza
+Orario di arrivo
+Codice Treno
+Numero Carrozze
+In orario
+Cancellato
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+È probabile che siano necessarie altre colonne per far funzionare la tabella nel modo corretto.
 
-## About Laravel
+Inserite inizialmente i dati tramite PhpMyAdmin o artisan tinker per chi ne ha capito l'utilizzo.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Create il modello Model relativo alla migrazione che avete predisposto al fine di mappare la tabelle del db ed un Controller per mostrare nella home page tutti i treni che sono in partenza dalla data odierna.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Steps
+- composer create-project laravel/laravel:^10.0 laravel-migration-train
+- composer require pacificdev/laravel_9_preset
+- modifico file in cjs
+- php artisan preset:ui bootstrap
+- npm install
+- npm run dev
+- php artisan serve
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- modifico file env
 
-## Learning Laravel
+Faccio la prima migration con le "table" di default su Laravel
+- php artisan migrate
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Creo la mia tabella trains come da esercizio
+- php artisan make:migration create_trains_table
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Aggiungo le colonne della mia tabella nel file appena creato in migrations
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- php artisan migrate per caricare la tabella nel db
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Oltre alle 4 tabelle di default (e la mia appena caricata) c'è la tabella migrations. Questa tabella:
+1) tiene traccia delle migration caricate nel db 
+2) Assegna un valore incrementale chiamato batch
 
-### Premium Partners
+Nel caso volessi fare l'operazione inversa:
+- php artisan migrate:rollback
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Mi permette di "revocare" la migration con il valore di batch più alto
 
-## Contributing
+Nel caso volessi aggiungere una colonna
+- php arstisan make:migration add_NOME_to_trains_table
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Nel caso volessi aggiungere più di una colonna
+- php artisan make:migration update_trains_table --table=trains (da rivedere)
 
-## Code of Conduct
+Devo aggiungere degli elementi alla mia tabella, ci sono due possibilità:
+1) Su phpmyadmin
+2) Da linea di comando con: 
+- php artisan ti
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Per usare ti prima di tutto mi occorre creare una Model in grado di immagazzinare le info:
+php artisan make:model Train
 
-## Security Vulnerabilities
+- php artisan ti
+- $train = new App\Models\Train
+- $train->enterprise = "Italo"
+- $train->enterprise = "Italica Treni"
+- ecc...
+Se voglio inserie un'altra riga:
+- $train = new App\Models\Train
+Per uscire 
+- exit
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Per gestire gli elementi mi serve un Controller
+- php artisan make:controller Guests/TrainsController -m Train
 
-## License
+Nel mio controller avrò tutta una serie di metodi di default
+Li cancello e lascio solo index e show (per ora)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Adesso posso creare le mie route
+E visualizzare il dd nel mio db con il Train Controller
